@@ -1,22 +1,22 @@
 <template>
   <nav class="navbar navbar-expand-md custom-nav">
     <div class="container">
-      <a class="navbar-brand" href="#">{{brandName}}</a>
+      <RouterLink class="navbar-brand" :to="{ name: 'home' }">{{ brandName }}</RouterLink>
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link" href="#">Home</a>
+          <RouterLink class="nav-link" :to="{ name: 'home' }">Home</RouterLink>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Books</a>
+          <RouterLink class="nav-link" :to="{ name: 'books' }">Books</RouterLink>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Contact Us</a>
+          <RouterLink class="nav-link" :to="{ name: 'contact' }">Contact Us</RouterLink>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Login</a>
+          <RouterLink class="nav-link" :to="{ name: 'login' }">Login</RouterLink>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Register</a>
+          <RouterLink class="nav-link" :to="{ name: 'register' }">Register</RouterLink>
         </li>
       </ul>
     </div>
@@ -24,33 +24,41 @@
 </template>
 
 <script>
-  export default {
-    name: "NavBar",
-    data() {
-      return {
-        brandName: "Bostorek"
-      }
+export default {
+  name: "NavBar",
+  data() {
+    return {
+      brandName: "Bostorek"
     }
   }
+}
 </script>
 
 <style scoped>
-  .custom-nav {
-    background-color: #063547;
-    padding: 15px 0;
-  }
+.custom-nav {
+  background-color: #063547;
+  padding: 15px 0;
+}
 
-  .navbar-brand {
-    padding: 0;
-    margin: 0;
-    color: #fff;
-    font-size: 24px;
-    font-weight: bold;
-  }
+.navbar-brand {
+  padding: 0;
+  margin: 0;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+}
 
-  .nav-link {
-    padding: 10px 25px;
-    color: #fff;
-    text-align: center;
-  }
+.nav-link {
+  padding: 10px 15px !important;
+  color: #fff;
+  text-align: center;
+}
+
+.nav-link:hover {
+  color: #44b89d;
+}
+
+.active-link {
+  color: #44b89d;
+}
 </style>
