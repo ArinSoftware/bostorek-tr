@@ -26,7 +26,7 @@ const books = [
     page: 280,
     description:
       'A heartwarming romance novel about unexpected love in a small town.',
-    rating: 7.8,
+    rating: 3.2,
     uploadDate: '19 Jan 2021',
   },
   {
@@ -55,7 +55,7 @@ const books = [
     author: 'Benjamin Turner',
     page: 600,
     description: 'A philosophical exploration of life, time, and the universe.',
-    rating: 9.7,
+    rating: 6.2,
     uploadDate: '19 Jan 2021',
   },
   {
@@ -85,7 +85,7 @@ const books = [
     page: 280,
     description:
       'A collection of eerie and spine-chilling short stories set in the woods.',
-    rating: 8.3,
+    rating: 2.3,
     uploadDate: '19 Jan 2021',
   },
   {
