@@ -4,6 +4,7 @@ import BooksView from '@/views/BooksView.vue';
 import ContactView from '@/views/ContactView.vue';
 import LoginView from '@/views/LoginView.vue';
 import RegisterView from '@/views/RegisterView.vue';
+import BookDetailView from '@/views/BookDetailView.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -17,6 +18,11 @@ const router = createRouter({
       path: '/books',
       name: 'books',
       component: BooksView,
+    },
+    {
+      path: '/books/:id',
+      name: 'book-detail',
+      component: BookDetailView,
     },
     {
       path: '/contact',
