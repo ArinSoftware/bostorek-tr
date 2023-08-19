@@ -1,26 +1,18 @@
 <template>
   <section>
     <div class="container">
-      <SectionHeader title="Book Detail" text="We declare long prop names using camelCase because this avoids" />
+      <SectionHeader :title="book.name" :text="book.author" />
       <button>Back</button>
       <div class="row mb-4">
         <div class="col-lg-6">
           <img class="card-img-top" src="../../template/images/b_detail.jpg" />
         </div>
         <div class="col-lg-6 details-wrapper">
-          <p class="lead description">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Amet, facilis quisquam.
-            Dolore
-            possimus iusto quia impedit natus, voluptates nemo nisi!
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Amet, facilis quisquam.
-            Dolore
-            possimus iusto quia impedit natus, voluptates nemo nisi!
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Amet, facilis quisquam.
-            Dolore
-            possimus iusto quia impedit natus, voluptates nemo nisi!</p>
+          <p class="lead description">{{ book.description }}</p>
           <div class="mb-4">
             <div class="row border-bottom pb-2">
               <div class="col-lg-6"><strong>Page</strong></div>
-              <div class="col-lg-6">278</div>
+              <div class="col-lg-6">{{ book.page }}</div>
             </div>
             <div class="row border-bottom pb-2">
               <div class="col-lg-6"><strong>Category</strong></div>
@@ -28,11 +20,11 @@
             </div>
             <div class="row border-bottom pb-2">
               <div class="col-lg-6"><strong>Rating</strong></div>
-              <div class="col-lg-6">7.8</div>
+              <div class="col-lg-6">{{ book.rating }}</div>
             </div>
             <div class="row border-bottom pb-2">
               <div class="col-lg-6"><strong>Upload Date</strong></div>
-              <div class="col-lg-6">19 Jan 2019</div>
+              <div class="col-lg-6">{{ book.uploadDate }}</div>
             </div>
           </div>
 
@@ -107,10 +99,22 @@
 
 <script>
 import SectionHeader from '@/components/SectionHeader.vue';
+import books from "@/db.js"
 export default {
   name: "BookDetailView",
   components: {
     SectionHeader
+  },
+  data() {
+    return {
+      book: null
+    }
+  },
+  created() {
+    const bookId = this.$route.params.id;
+    this.book = books.find(book => book.id === parseInt(bookId))
+
+    console.log("this.book", this.book);
   }
 }
 </script>
