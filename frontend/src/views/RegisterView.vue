@@ -1,7 +1,7 @@
 <template>
-  <section>
+  <section class="full-section-height">
     <div class="container">
-      <form class="mt-5" @submit.prevent="submitForm">
+      <form @submit.prevent="submitForm">
         <div class="row justify-content-center">
           <!-- Username Field (Medium and Larger Screens) -->
           <div class="col-md-6 col-8 mb-3">
@@ -53,10 +53,10 @@ export default {
   },
   methods: {
     submitForm() {
-      console.log("formData::", this.formData)
+      console.log("register formData::", this.formData)
     }
   }
 }
 </script>
 
-<style lang="scss" scoped></style>
+<style scoped></style>
