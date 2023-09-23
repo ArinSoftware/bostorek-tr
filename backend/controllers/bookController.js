@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
 import Book from '../models/Book.js';
+import { isValidObjectId, findDocumentById } from '../utils/index.js';
 
 const getAllBooks = async (req, res) => {
   try {
@@ -14,16 +14,11 @@ const getAllBooks = async (req, res) => {
 const getABook = async (req, res) => {
   const { id } = req.params;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: 'Object Id is not valid' });
-  }
+  if (isValidObjectId(id, res)) return;
 
   try {
-    const book = await Book.findById(id);
-
-    if (!book) {
-      return res.status(404).json({ error: 'The book is not exist!' });
-    }
+    const book = await findDocumentById(Book, id, res);
+    if (!book) return;
 
     res.status(200).json(book);
   } catch (error) {
@@ -72,16 +67,11 @@ const updateABook = async (req, res) => {
   const { id } = req.params;
   const { title, author, description, pageNumber, rating } = req.body;
 
-  if (!mongoose.Types.ObjectId.isValid(id)) {
-    return res.status(400).json({ error: 'Object Id is not valid' });
-  }
+  if (isValidObjectId(id, res)) return;
 
   try {
-    const book = await Book.findById(id);
-
-    if (!book) {
-      return res.status(404).json({ error: 'The book is not exist!' });
-    }
+    const book = await findDocumentById(Book, id, res);
+    if (!book) return;
 
     book.title = title || book.title;
     book.author = author || book.author;
@@ -98,4 +88,21 @@ const updateABook = async (req, res) => {
   }
 };
 
-export { getAllBooks, createABook, getABook, updateABook };
+const deleteABook = async (req, res) => {
+  const { id } = req.params;
+
+  if (isValidObjectId(id, res)) return;
+
+  try {
+    const book = await findDocumentById(Book, id, res);
+    if (!book) return;
+
+    await book.deleteOne();
+    res.status(200).json({ message: 'Book deleted successfully' });
+  } catch (error) {
+    console.error('Error at deleteABook', error);
+    return res.status(500).json({ error: 'Internal Server error' });
+  }
+};
+
+export { getAllBooks, createABook, getABook, updateABook, deleteABook };
