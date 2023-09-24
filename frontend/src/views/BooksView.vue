@@ -12,7 +12,7 @@
 import SectionHeader from '@/components/SectionHeader.vue';
 import BookList from '@/components/BookList.vue';
 import Pagination from '@/components/Pagination.vue';
-import books from "@/db.js";
+
 export default {
   name: "BooksView",
   components: {
@@ -22,7 +22,7 @@ export default {
   },
   data() {
     return {
-      books: books,
+      books: [],
       currentPage: 1,
       itemsPerPage: 8
     }
@@ -40,7 +40,21 @@ export default {
   methods: {
     updatePage(page) {
       this.currentPage = page
+    },
+
+    async fetchBooks() {
+      try {
+        const respnse = await fetch('http://localhost:3000/api/v1/books');
+        const data = await respnse.json();
+        this.books = data;
+      } catch (error) {
+
+      }
     }
+  },
+
+  created() {
+    this.fetchBooks();
   }
 
 }
