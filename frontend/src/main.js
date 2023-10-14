@@ -4,6 +4,7 @@ import '@/assets/styles.css';
 import { createApp } from 'vue';
 import App from '@/App.vue';
 import router from '@/router/index.js';
+import { createPinia } from 'pinia';
 
 /* import the fontawesome core */
 import { library } from '@fortawesome/fontawesome-svg-core';
@@ -19,4 +20,8 @@ import { faThumbsUp } from '@fortawesome/free-regular-svg-icons';
 library.add(faArrowLeft, faThumbsUp);
 
 const app = createApp(App);
-app.use(router).component('font-awesome-icon', FontAwesomeIcon).mount('#app');
+app
+  .use(createPinia())
+  .use(router)
+  .component('font-awesome-icon', FontAwesomeIcon)
+  .mount('#app');

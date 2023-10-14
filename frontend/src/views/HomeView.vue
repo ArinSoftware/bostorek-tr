@@ -83,6 +83,8 @@ import SectionHeader from '@/components/SectionHeader.vue';
 import hero_1 from '@/assets/images/hero_1.jpg';
 import hero_2 from '@/assets/images/hero_2.jpg';
 import hero_3 from '@/assets/images/hero_3.jpg';
+import { useBookStore } from '@/stores/bookStore.js';
+import { mapState } from 'pinia';
 
 export default {
   name: 'HomeView',
@@ -112,27 +114,18 @@ export default {
             'Neque porro quisquam est, qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit.',
         },
       ],
-      books: [],
+      /* books: [], */
+      /* bStore: useBookStore(), */
       selectedFilter: 'latest',
       openAccordionIndex: 0,
     };
-  },
-
-  created() {
-    this.fetchBooks();
   },
 
   methods: {
     selectFiler(filter) {
       this.selectedFilter = filter;
     },
-    async fetchBooks() {
-      try {
-        const response = await fetch('http://localhost:3000/api/v1/books');
-        const data = await response.json();
-        this.books = data;
-      } catch (error) {}
-    },
+
     toggleAccordion(index) {
       if (this.openAccordionIndex === index) {
         this.openAccordionIndex = -1;
@@ -142,6 +135,7 @@ export default {
     },
   },
   computed: {
+    ...mapState(useBookStore, ['books']),
     filteredBooks() {
       const copiedBooks = [...this.books];
 
@@ -150,11 +144,6 @@ export default {
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
           .slice(0, 4);
       } else if (this.selectedFilter === 'best') {
-        console.log(
-          'Best RaTINGS',
-          copiedBooks.sort((a, b) => b.rating > a.rating)
-        );
-
         return copiedBooks.sort((a, b) => b.rating - a.rating).slice(0, 4);
       }
     },
