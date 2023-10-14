@@ -2,7 +2,13 @@
   <section>
     <div class="container" v-if="!loading">
       <SectionHeader :title="book.title" :text="book.author" />
-      <font-awesome-icon icon="arrow-left" size="2xl" class="mb-2" style="cursor:pointer" @click="goToBackBooks" />
+      <font-awesome-icon
+        icon="arrow-left"
+        size="2xl"
+        class="mb-2"
+        style="cursor: pointer"
+        @click="goToBackBooks"
+      />
       <div class="row mb-4">
         <div class="col-lg-6">
           <img class="card-img-top" src="../../template/images/b_detail.jpg" />
@@ -32,7 +38,10 @@
             <h3 class="diplay-6 mb-2">Comments</h3>
             <div class="card mb-4">
               <div class="card-body">
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat, suscipit.</p>
+                <p>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                  Repellat, suscipit.
+                </p>
                 <div class="d-flex justify-content-between">
                   <p class="fw-bold fst-italic">John Doe</p>
                   <div class="d-flex align-items-center">
@@ -44,7 +53,10 @@
             </div>
             <div class="card mb-4">
               <div class="card-body">
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat, suscipit.</p>
+                <p>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                  Repellat, suscipit.
+                </p>
                 <div class="d-flex justify-content-between">
                   <p class="fw-bold fst-italic">John Doe</p>
                   <div class="d-flex align-items-center">
@@ -56,7 +68,10 @@
             </div>
             <div class="card mb-4">
               <div class="card-body">
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat, suscipit.</p>
+                <p>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                  Repellat, suscipit.
+                </p>
                 <div class="d-flex justify-content-between">
                   <p class="fw-bold fst-italic">John Doe</p>
                   <div class="d-flex align-items-center">
@@ -68,7 +83,10 @@
             </div>
             <div class="card mb-4">
               <div class="card-body">
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat, suscipit.</p>
+                <p>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                  Repellat, suscipit.
+                </p>
                 <div class="d-flex justify-content-between">
                   <p class="fw-bold fst-italic">John Doe</p>
                   <div class="d-flex align-items-center">
@@ -80,7 +98,10 @@
             </div>
             <div class="card mb-4">
               <div class="card-body">
-                <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Repellat, suscipit.</p>
+                <p>
+                  Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                  Repellat, suscipit.
+                </p>
                 <div class="d-flex justify-content-between">
                   <p class="fw-bold fst-italic">John Doe</p>
                   <div class="d-flex align-items-center">
@@ -102,25 +123,34 @@
 
 <script>
 import SectionHeader from '@/components/SectionHeader.vue';
+import { useBookStore } from '@/stores/bookStore.js';
+import { mapState } from 'pinia';
 export default {
-  name: "BookDetailView",
+  name: 'BookDetailView',
   components: {
-    SectionHeader
+    SectionHeader,
   },
   data() {
     return {
       book: null,
-      loading: true
-    }
+      loading: true,
+    };
   },
   created() {
-    this.fetchABook();
+    this.selectBook();
   },
   methods: {
     goToBackBooks() {
-      this.$router.push({ name: "books" })
+      this.$router.push({ name: 'books' });
     },
-    async fetchABook() {
+
+    selectBook() {
+      const bookId = this.$route.params.id;
+      this.book = this.selectedBook(bookId);
+      this.loading = false;
+    },
+
+    /*     async fetchABook() {
       const bookId = this.$route.params.id;
       try {
         const response = await fetch(`http://localhost:3000/api/v1/books/${bookId}`);
@@ -130,9 +160,12 @@ export default {
       } catch (error) {
 
       }
-    }
-  }
-}
+    } */
+  },
+  computed: {
+    ...mapState(useBookStore, ['selectedBook']),
+  },
+};
 </script>
 
 <style scoped>

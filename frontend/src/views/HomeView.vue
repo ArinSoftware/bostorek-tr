@@ -1,6 +1,6 @@
 <template>
   <section>
-    <Carousel :items="carouselItems" height="400px"></Carousel>
+    <CarouselWidget :items="carouselItems" height="400px"></CarouselWidget>
   </section>
   <section class="my-5">
     <div class="container">
@@ -83,17 +83,17 @@
 </template>
 
 <script>
-import Carousel from '@/components/widgets/Carousel.vue';
+import CarouselWidget from '@/components/widgets/CarouselWidget.vue';
 import SectionHeader from '@/components/SectionHeader.vue';
 import hero_1 from '@/assets/images/hero_1.jpg';
 import hero_2 from '@/assets/images/hero_2.jpg';
 import hero_3 from '@/assets/images/hero_3.jpg';
 import { useBookStore } from '@/stores/bookStore.js';
-import { mapState, mapActions } from 'pinia';
+import { mapState } from 'pinia';
 
 export default {
   name: 'HomeView',
-  components: { Carousel, SectionHeader },
+  components: { CarouselWidget, SectionHeader },
   data() {
     return {
       carouselItems: [
@@ -126,12 +126,7 @@ export default {
     };
   },
 
-  created() {
-    this.fetchBooks();
-  },
-
   methods: {
-    ...mapActions(useBookStore, ['fetchBooks']),
     selectFiler(filter) {
       this.selectedFilter = filter;
     },

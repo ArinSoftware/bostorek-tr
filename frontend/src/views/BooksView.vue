@@ -6,7 +6,7 @@
         text="We declare long prop names using camelCase because this avoids"
       />
       <BookList :books="paginatedBooks" />
-      <Pagination
+      <PaginationWidget
         :currentPage="currentPage"
         :totalPages="totalPages"
         @page-changed="updatePage"
@@ -18,7 +18,7 @@
 <script>
 import SectionHeader from '@/components/SectionHeader.vue';
 import BookList from '@/components/BookList.vue';
-import Pagination from '@/components/Pagination.vue';
+import PaginationWidget from '@/components/widgets/PaginationWidget.vue';
 import { useBookStore } from '@/stores/bookStore.js';
 import { mapState } from 'pinia';
 
@@ -27,7 +27,7 @@ export default {
   components: {
     SectionHeader,
     BookList,
-    Pagination,
+    PaginationWidget,
   },
   data() {
     return {
