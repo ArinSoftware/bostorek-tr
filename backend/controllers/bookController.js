@@ -1,5 +1,9 @@
 import Book from '../models/Book.js';
-import { isValidObjectId, findDocumentById } from '../utils/index.js';
+import {
+  isValidObjectId,
+  findDocumentById,
+  checkValidationErrors,
+} from '../utils/index.js';
 
 const getAllBooks = async (req, res) => {
   try {
@@ -47,15 +51,7 @@ const createABook = async (req, res) => {
   } catch (error) {
     // Handle mongoose validation error
     if (error.name === 'ValidationError') {
-      const validationErrors = {};
-
-      for (let field in error.errors) {
-        validationErrors[field] = error.errors[field].message;
-      }
-
-      return res
-        .status(400)
-        .json({ error: 'Validation error', validationErrors });
+      if (checkValidationErrors(error, res)) return;
     } else {
       console.error('Error at createBook', error);
       return res.status(500).json({ error: 'Internal Server error' });

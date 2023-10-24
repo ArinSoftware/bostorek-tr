@@ -21,4 +21,14 @@ const findDocumentById = async (model, id, res) => {
   }
 };
 
-export { isValidObjectId, findDocumentById };
+const checkValidationErrors = (error, res) => {
+  const validationErrors = {};
+
+  for (let field in error.errors) {
+    validationErrors[field] = error.errors[field].message;
+  }
+
+  return res.status(400).json({ error: 'Validation error', validationErrors });
+};
+
+export { isValidObjectId, findDocumentById, checkValidationErrors };
