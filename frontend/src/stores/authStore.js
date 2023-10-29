@@ -6,7 +6,11 @@ export const useAuthStore = defineStore('authStore', {
     user: null,
   }),
 
-  getters: {},
+  getters: {
+    isLoggedIn: (state) => {
+      return !!state.user;
+    },
+  },
 
   actions: {
     async register(newUserData) {
@@ -15,9 +19,9 @@ export const useAuthStore = defineStore('authStore', {
           'http://localhost:3000/api/v1/auth/register',
           newUserData
         );
-        console.log('response', response);
+        return response.data;
       } catch (error) {
-        console.error('Error at getting user', error);
+        throw error;
       }
     },
 
@@ -27,8 +31,8 @@ export const useAuthStore = defineStore('authStore', {
           'http://localhost:3000/api/v1/auth/login',
           userData
         );
-        console.log('response', response);
         this.user = response.data.user;
+        localStorage.setItem('user', JSON.stringify(response.data.user));
       } catch (error) {
         console.error('Error at login user', error);
       }
