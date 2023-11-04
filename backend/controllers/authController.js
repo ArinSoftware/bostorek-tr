@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import { checkValidationErrors } from '../utils/index.js';
 import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
 
 const register = async (req, res) => {
   try {
@@ -51,9 +52,14 @@ const login = async (req, res) => {
 
     user.password = undefined;
 
+    //Generate token
+    const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET_KEY, {
+      expiresIn: process.env.JWT_EXPIRE_TIME,
+    });
+
     return res
       .status(200)
-      .json({ message: 'User logged in successfully!', user });
+      .json({ message: 'User logged in successfully!', user, token });
   } catch (error) {
     console.error('Error at login', error);
     return res.status(500).json({ error: 'Internal Server error' });
