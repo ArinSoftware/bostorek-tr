@@ -21,7 +21,7 @@ export const useAuthStore = defineStore('authStore', {
         );
         return response.data;
       } catch (error) {
-        throw error;
+        throw error.response.data;
       }
     },
 
