@@ -22,3 +22,25 @@ a {
   display: flex;
   align-items: center;
 }
+
+.form-control {
+  border-radius: 25px;
+  height: 48px;
+}
+
+.form-control:focus {
+  box-shadow: none !important;
+}
+
+.btn-primary {
+  border-radius: 25px;
+  height: 48px;
+  background-color: var(--secondary-color) !important;
+  border: 1px solid var(--secondary-color) !important;
+}
+
+.btn-primary:hover {
+  background-color: #fff !important;
+  color: var(--secondary-color) !important;
+  transition: all 0.3s ease;
+}
