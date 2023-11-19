@@ -25,5 +25,18 @@ export const useBookStore = defineStore('bookStore', {
         this.isLoading = false;
       }
     },
+
+    async addNewBook(newBook) {
+      console.log('store new book', newBook);
+      try {
+        const response = await axios.post(
+          'http://localhost:3000/api/v1/books',
+          newBook
+        );
+        this.books.push(response.data.book);
+      } catch (error) {
+        console.error('Error at add new  books', error);
+      }
+    },
   },
 });

@@ -17,11 +17,10 @@ const bookSchema = new mongoose.Schema(
       type: Number,
       min: 1,
     },
-    rating: {
-      type: Number,
-      required: true,
-      min: 0,
-      max: 10,
+    uploader: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      requred: true,
     },
   },
 
