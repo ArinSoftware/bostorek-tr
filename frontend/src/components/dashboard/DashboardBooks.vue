@@ -23,30 +23,31 @@
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Gülün Adı</td>
-            <td>Umberto Eco</td>
-            <td style="max-width: 250px">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem
-              accusantium doloremque laudantium.
-            </td>
-            <td>217</td>
-            <td class="text-center">
-              <font-awesome-icon
-                :icon="['far', 'pen-to-square']"
-                class="text-warning"
-                style="cursor: pointer"
-              />
-            </td>
-            <td class="text-center">
-              <font-awesome-icon
-                :icon="['fas', 'trash']"
-                class="text-danger"
-                style="cursor: pointer"
-                @click="deleteBook(book._id)"
-              />
-            </td>
-          </tr>
+          <TransitionGroup name="list">
+            <tr v-for="book in userBooks" :key="book._id">
+              <td>{{ book.title }}</td>
+              <td>{{ book.author }}</td>
+              <td style="max-width: 250px">
+                {{ book.description }}
+              </td>
+              <td>{{ book.pageNumber }}</td>
+              <td class="text-center">
+                <font-awesome-icon
+                  :icon="['far', 'pen-to-square']"
+                  class="text-warning"
+                  style="cursor: pointer"
+                />
+              </td>
+              <td class="text-center">
+                <font-awesome-icon
+                  :icon="['fas', 'trash']"
+                  class="text-danger"
+                  style="cursor: pointer"
+                  @click="deleteBook(book._id)"
+                />
+              </td>
+            </tr>
+          </TransitionGroup>
         </tbody>
       </table>
     </div>
@@ -142,8 +143,9 @@
 
 <script>
 import { useBookStore } from '@/stores/bookStore.js';
-import { mapActions } from 'pinia';
+import { mapActions, mapState } from 'pinia';
 import { Modal } from 'bootstrap';
+import { useToast } from 'vue-toastification';
 export default {
   name: 'DashboardBooks',
   data() {
@@ -157,11 +159,42 @@ export default {
       },
     };
   },
+  created() {
+    this.fetchBooksByUploader();
+  },
+  computed: {
+    ...mapState(useBookStore, ['userUploadedBooks']),
+    userBooks() {
+      return this.userUploadedBooks
+        .slice()
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+    },
+  },
   methods: {
-    ...mapActions(useBookStore, ['addNewBook']),
+    ...mapActions(useBookStore, ['addNewBook', 'fetchBooksByUploader']),
     async addBook() {
       try {
         await this.addNewBook(this.newBook);
+
+        this.modal.hide();
+        this.newBook = {
+          title: '',
+          author: '',
+          description: '',
+          pageNumber: null,
+        };
+
+        await this.fetchBooksByUploader();
+
+        const toast = useToast();
+
+        toast.success('New book added successfully', {
+          position: 'top-right',
+          timeout: 1000,
+          closeButton: 'button',
+          icon: true,
+          rtl: false,
+        });
       } catch (error) {}
     },
   },
@@ -177,5 +210,16 @@ export default {
   height: 48px;
   margin-right: 20px;
   min-width: 120px;
+}
+
+.list-enter-active,
+.list-leaave-active {
+  transition: all 2s ease;
+}
+
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: translateX(300px);
 }
 </style>
