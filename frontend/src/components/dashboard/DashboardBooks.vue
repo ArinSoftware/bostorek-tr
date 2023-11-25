@@ -195,7 +195,9 @@ export default {
           icon: true,
           rtl: false,
         });
-      } catch (error) {}
+      } catch (error) {
+        console.error(error);
+      }
     },
   },
   mounted() {

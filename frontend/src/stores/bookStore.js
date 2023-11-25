@@ -40,7 +40,6 @@ export const useBookStore = defineStore('bookStore', {
     },
 
     async addNewBook(newBook) {
-      console.log('store new book', newBook);
       try {
         const response = await axios.post(
           'http://localhost:3000/api/v1/books',
@@ -48,7 +47,7 @@ export const useBookStore = defineStore('bookStore', {
         );
         this.books.push(response.data.book);
       } catch (error) {
-        console.error('Error at add new  books', error);
+        throw error.response.data;
       }
     },
   },
