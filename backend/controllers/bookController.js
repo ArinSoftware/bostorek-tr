@@ -105,8 +105,6 @@ const updateABook = async (req, res) => {
 };
 
 const deleteABook = async (req, res) => {
-  console.log('req.user', req.user);
-
   const { id } = req.params;
 
   if (isValidObjectId(id, res)) return;
