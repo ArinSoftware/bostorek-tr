@@ -23,7 +23,7 @@ a {
   align-items: center;
 }
 
-.form-control {
+.form-control:not(textarea) {
   border-radius: 25px;
   height: 48px;
 }
@@ -44,4 +44,18 @@ a {
   background-color: #fff !important;
   color: var(--secondary-color) !important;
   transition: all 0.3s ease;
+}
+
+.page-link {
+  color: var(--primary-color);
+}
+
+.page-link:hover {
+  cursor: pointer;
+}
+
+.page-link,
+.page-link.active {
+  background-color: var(--secondary-color) !important;
+  border-color: #fff !important;
 }

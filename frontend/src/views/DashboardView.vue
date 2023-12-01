@@ -1,5 +1,5 @@
 <template>
-  <section style="min-height: calc(100vh - 130px)">
+  <section style="min-height: calc(100vh - 130px); overflow: hidden">
     <div class="container py-5">
       <ul class="nav nav-tabs" id="dashboardTab" role="tablist">
         <li class="nav-item" role="presentation" @click="activeTab = 'general'">
