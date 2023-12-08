@@ -64,7 +64,10 @@ const storedUser = localStorage.getItem('user');
 
 if (storedUser) {
   const userData = JSON.parse(storedUser);
-  useAuthStore(pinia).user = userData;
+
+  useAuthStore(pinia).user = userData.user;
+
+  console.log('useAuthStore(pinia).user', useAuthStore(pinia).user);
 
   const token = userData.token;
 

@@ -4,8 +4,6 @@ const createAComment = async (req, res) => {
   try {
     const { bookId, content, userId } = req.body;
 
-    console.log('content', content);
-
     const newComment = await Comment.create({
       content: content,
       book: bookId,
@@ -15,7 +13,24 @@ const createAComment = async (req, res) => {
     return res
       .status(201)
       .json({ message: 'Comment created succesfully', comment: newComment });
-  } catch (error) {}
+  } catch (error) {
+    console.error('Error at createAComment', error);
+    return res.status(500).json({ error: 'Internal Server error' });
+  }
 };
 
-export { createAComment };
+const getCommentsForBook = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const comments = await Comment.find({ book: id }).populate('postedBy');
+    return res
+      .status(201)
+      .json({ message: 'Comments for book fetched', comments });
+  } catch (error) {
+    console.error('Error at getCommentsForBook', error);
+    return res.status(500).json({ error: 'Internal Server error' });
+  }
+};
+
+export { createAComment, getCommentsForBook };

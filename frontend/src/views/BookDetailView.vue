@@ -64,27 +64,35 @@
         </div>
       </div>
     </div>
-    <hr />
+    <hr v-if="isLoggedIn" />
     <div class="row mt-3">
       <div class="col-md-12">
         <div class="box">
-          <h3 style="color: var(--primary-color)">Comment The Book</h3>
-          <form @submit.prevent="addComment">
-            <!-- Comment Text Area -->
-            <div class="mb-3">
-              <textarea
-                id="comment"
-                class="form-control"
-                rows="4"
-                placeholder="Enter your comment"
-                required
-                v-model="commentContent"
-              ></textarea>
-            </div>
+          <div v-if="isLoggedIn">
+            <h3 style="color: var(--primary-color)">Comment The Book</h3>
+            <form @submit.prevent="addComment">
+              <!-- Comment Text Area -->
+              <div class="mb-3">
+                <textarea
+                  id="comment"
+                  class="form-control"
+                  rows="4"
+                  placeholder="Enter your comment"
+                  required
+                  v-model="commentContent"
+                ></textarea>
+              </div>
 
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Comment</button>
-          </form>
+              <!-- Submit Button -->
+              <button type="submit" class="btn btn-primary">Comment</button>
+            </form>
+          </div>
+
+          <router-link v-else to="/login">
+            <p style="color: var(--secondary-color)">
+              Log in to leave a comment
+            </p>
+          </router-link>
         </div>
       </div>
     </div>
@@ -94,18 +102,21 @@
         <div class="box">
           <h3 style="color: var(--primary-color)">Comments</h3>
           <div>
-            <div class="card mb-4">
+            <div
+              class="card mb-4"
+              v-for="comment in commentsForBook"
+              :key="comment._id"
+            >
               <div class="card-body">
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
-                  do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+                  {{ comment.content }}
                 </p>
 
                 <div class="d-flex justify-content-between">
                   <div class="d-flex flex-row align-items-center">
-                    <p class="small mb-0 ms-2">Username</p>
+                    <p class="small mb-0 ms-2">
+                      {{ comment.postedBy.username }}
+                    </p>
                   </div>
                   <div
                     class="d-flex flex-row align-items-center"
@@ -118,7 +129,7 @@
                 </div>
               </div>
             </div>
-            <div class="card mb-4">
+            <!--             <div class="card mb-4">
               <div class="card-body">
                 <p>
                   Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
@@ -144,7 +155,7 @@
                   </div>
                 </div>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -172,21 +183,28 @@ export default {
   },
   created() {
     this.selectBook();
+    this.fetchCommentsForBook(this.$route.params.id);
   },
   methods: {
-    ...mapActions(useCommentStore, ['addNewComment']),
+    ...mapActions(useCommentStore, ['addNewComment', 'fetchCommentsForBook']),
     async addComment() {
       try {
         const bookId = this.$route.params.id;
         const content = this.commentContent;
-        const userId = this.user.user._id;
+        const userId = this.user._id;
 
         await this.addNewComment({
           bookId,
           content,
           userId,
         });
-      } catch (error) {}
+
+        this.commentContent = '';
+
+        await this.fetchCommentsForBook(this.$route.params.id);
+      } catch (error) {
+        console.log(error);
+      }
     },
     goToBackBooks() {
       this.$router.push({ name: 'books' });
@@ -199,7 +217,8 @@ export default {
   },
   computed: {
     ...mapState(useBookStore, ['selectedBook']),
-    ...mapState(useAuthStore, ['user']),
+    ...mapState(useAuthStore, ['user', 'isLoggedIn']),
+    ...mapState(useCommentStore, ['commentsForBook']),
   },
 };
 </script>
