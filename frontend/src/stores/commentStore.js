@@ -5,6 +5,7 @@ export const useCommentStore = defineStore('commentStore', {
   state: () => ({
     comments: [],
     commentsForBook: [],
+    commentsByUser: [],
   }),
   actions: {
     async addNewComment(newComment) {
@@ -27,6 +28,17 @@ export const useCommentStore = defineStore('commentStore', {
         );
 
         this.commentsForBook = response.data.comments;
+      } catch (error) {
+        console.log(error);
+      }
+    },
+    async fetchCommentsByUser(userId) {
+      try {
+        const response = await axios.get(
+          `http://localhost:3000/api/v1/comments/user/${userId}`
+        );
+
+        this.commentsByUser = response.data.comments;
       } catch (error) {
         console.log(error);
       }

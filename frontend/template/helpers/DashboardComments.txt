@@ -1,0 +1,44 @@
+<template>
+  <div class="row">
+    <div class="col">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Content</th>
+            <th>Book</th>
+            <th class="text-center">Edit</th>
+            <th class="text-center">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Content Detail</td>
+            <td>Book Name</td>
+            <td class="text-center">
+              <font-awesome-icon
+                :icon="['far', 'pen-to-square']"
+                class="text-warning"
+                style="cursor: pointer"
+              />
+            </td>
+            <td class="text-center">
+              <font-awesome-icon
+                :icon="['fas', 'trash']"
+                class="text-danger"
+                style="cursor: pointer"
+              />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  name: 'DashboardComments',
+};
+</script>
+
+<style lang="scss" scoped></style>
