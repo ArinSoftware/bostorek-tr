@@ -30,7 +30,9 @@
             </div>
             <div class="row border-bottom pb-2">
               <div class="col-lg-6"><strong>Rating</strong></div>
-              <div class="col-lg-6">8.2 - (23 rates)</div>
+              <div class="col-lg-6">
+                {{ averageRating }} - ({{ ratingCount }} rates)
+              </div>
             </div>
             <div class="row border-bottom pb-2">
               <div class="col-lg-6"><strong>Upload Date</strong></div>
@@ -43,24 +45,37 @@
     <div class="row mt-3">
       <div class="col-md-6">
         <div class="box">
-          <h3 style="color: var(--primary-color)">Rate The Book</h3>
-          <form>
-            <!-- Rating Input -->
-            <div class="mb-3">
-              <input
-                type="number"
-                id="rating"
-                class="form-control w-50"
-                min="1"
-                max="10"
-                placeholder="Rate (1-10)"
-                required
-              />
+          <div v-if="isLoggedIn">
+            <div v-if="!isUserAlreadyRated">
+              <h3 style="color: var(--primary-color)">Rate The Book</h3>
+              <form @submit.prevent="addRate">
+                <!-- Rating Input -->
+                <div class="mb-3">
+                  <input
+                    type="number"
+                    id="rating"
+                    class="form-control w-50"
+                    min="1"
+                    max="10"
+                    placeholder="Rate (1-10)"
+                    required
+                    v-model="userRate"
+                  />
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Rate</button>
+              </form>
             </div>
 
-            <!-- Submit Button -->
-            <button type="submit" class="btn btn-primary">Rate</button>
-          </form>
+            <div v-else>Your Rate: {{ userRating }}</div>
+          </div>
+
+          <router-link v-else to="/login">
+            <p style="color: var(--secondary-color)">
+              Log in to leave a rate for the book
+            </p>
+          </router-link>
         </div>
       </div>
     </div>
@@ -168,6 +183,7 @@ import SectionHeader from '@/components/SectionHeader.vue';
 import { useBookStore } from '@/stores/bookStore.js';
 import { useAuthStore } from '@/stores/authStore.js';
 import { useCommentStore } from '@/stores/commentStore.js';
+import { useRatingStore } from '@/stores/ratingStore.js';
 import { mapState, mapActions } from 'pinia';
 export default {
   name: 'BookDetailView',
@@ -179,14 +195,17 @@ export default {
       book: null,
       loading: true,
       commentContent: '',
+      userRate: null,
     };
   },
   created() {
     this.selectBook();
     this.fetchCommentsForBook(this.$route.params.id);
+    this.fetchRatingsForBook(this.$route.params.id);
   },
   methods: {
     ...mapActions(useCommentStore, ['addNewComment', 'fetchCommentsForBook']),
+    ...mapActions(useRatingStore, ['addNewRate', 'fetchRatingsForBook']),
     async addComment() {
       try {
         const bookId = this.$route.params.id;
@@ -206,6 +225,24 @@ export default {
         console.log(error);
       }
     },
+
+    async addRate() {
+      try {
+        const bookId = this.$route.params.id;
+        const rate = this.userRate;
+        const userId = this.user._id;
+
+        await this.addNewRate({
+          bookId,
+          rate,
+          userId,
+        });
+
+        this.userRate = null;
+
+        await this.fetchRatingsForBook(this.$route.params.id);
+      } catch (error) {}
+    },
     goToBackBooks() {
       this.$router.push({ name: 'books' });
     },
@@ -219,6 +256,42 @@ export default {
     ...mapState(useBookStore, ['selectedBook']),
     ...mapState(useAuthStore, ['user', 'isLoggedIn']),
     ...mapState(useCommentStore, ['commentsForBook']),
+    ...mapState(useRatingStore, ['ratingsForBook']),
+
+    averageRating() {
+      if (this.ratingsForBook.length > 0) {
+        const totalRating = this.ratingsForBook.reduce(
+          (sum, rating) => sum + rating.rate,
+          0
+        );
+
+        return (totalRating / this.ratingsForBook.length).toFixed(1);
+      } else {
+        return 0;
+      }
+    },
+
+    ratingCount() {
+      return this.ratingsForBook ? this.ratingsForBook.length : 0;
+    },
+
+    isUserAlreadyRated() {
+      if (!this.user) {
+        return false;
+      }
+
+      return this.ratingsForBook.some(
+        (rating) => rating.ratedBy._id === this.user._id
+      );
+    },
+
+    userRating() {
+      const userRatingObj = this.ratingsForBook.find(
+        (rating) => rating.ratedBy._id === this.user._id
+      );
+
+      return userRatingObj ? userRatingObj.rate : null;
+    },
   },
 };
 </script>
