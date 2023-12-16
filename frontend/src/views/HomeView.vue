@@ -80,6 +80,46 @@
       </div>
     </div>
   </section>
+  <section class="py-5" style="background-color: #f5f6f9">
+    <div class="container">
+      <SectionHeader
+        title="Latest Comments"
+        text="We declare long prop names using camelCase because this avoids"
+      />
+
+      <div class="row d-flex justify-content-center">
+        <div
+          class="col-md-6"
+          v-for="comment in prepared4Comments"
+          :key="comment._id"
+        >
+          <div class="card mb-3">
+            <div class="card-body">
+              <div class="d-flex flex-start align-items-center">
+                <img
+                  class="rounded-circle shadow-1-strong me-3"
+                  src="../assets/images/c1.jpg"
+                  alt="avatar"
+                  width="60"
+                  height="60"
+                />
+                <div>
+                  <h6 class="fw-bold text-primary mb-1">{{ comment.title }}</h6>
+                  <p class="text-muted small mb-0">
+                    {{ comment.postedBy.username }} - {{ comment.createdAt }}
+                  </p>
+                </div>
+              </div>
+
+              <p class="mt-3 mb-4 pb-2">
+                {{ comment.content }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -89,6 +129,7 @@ import hero_1 from '@/assets/images/hero_1.jpg';
 import hero_2 from '@/assets/images/hero_2.jpg';
 import hero_3 from '@/assets/images/hero_3.jpg';
 import { useBookStore } from '@/stores/bookStore.js';
+import { useCommentStore } from '@/stores/commentStore.js';
 import { mapState } from 'pinia';
 
 export default {
@@ -141,6 +182,27 @@ export default {
   },
   computed: {
     ...mapState(useBookStore, ['books', 'isLoading']),
+    ...mapState(useCommentStore, ['comments']),
+    prepared4Comments() {
+      const latest4Comments = this.comments
+        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        .slice(0, 4);
+
+      return latest4Comments.map((comment) => {
+        const correspondingBook = this.books.find(
+          (book) => book._id === comment.book
+        );
+
+        if (correspondingBook) {
+          return {
+            ...comment,
+            title: correspondingBook.title,
+          };
+        }
+
+        return comment;
+      });
+    },
     filteredBooks() {
       const copiedBooks = [...this.books];
 

@@ -10,6 +10,7 @@ router
 
 router
   .route('/')
+  .get(commentController.getAllComments)
   .post(authMiddleware.authenticateUser, commentController.createAComment);
 
 export default router;

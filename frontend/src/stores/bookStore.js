@@ -20,6 +20,7 @@ export const useBookStore = defineStore('bookStore', {
       try {
         const response = await axios.get('http://localhost:3000/api/v1/books');
         this.books = response.data;
+        console.log('this.books', this.books);
       } catch (error) {
         console.error('Error at fetching books', error);
       } finally {
