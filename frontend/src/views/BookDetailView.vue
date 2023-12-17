@@ -201,7 +201,6 @@ export default {
   created() {
     this.selectBook();
     this.fetchCommentsForBook(this.$route.params.id);
-    this.fetchRatingsForBook(this.$route.params.id);
   },
   methods: {
     ...mapActions(useCommentStore, ['addNewComment', 'fetchCommentsForBook']),
@@ -249,6 +248,7 @@ export default {
     selectBook() {
       const bookId = this.$route.params.id;
       this.book = this.selectedBook(bookId);
+      console.log('this.book', this.book);
       this.loading = false;
     },
   },
