@@ -13,4 +13,12 @@ router
   .get(commentController.getAllComments)
   .post(authMiddleware.authenticateUser, commentController.createAComment);
 
+router
+  .route('/:id/upvote')
+  .post(authMiddleware.authenticateUser, commentController.upvoteComment);
+
+router
+  .route('/:id/downvote')
+  .post(authMiddleware.authenticateUser, commentController.downvoteComment);
+
 export default router;

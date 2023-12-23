@@ -112,6 +112,9 @@
       </div>
     </div>
     <hr />
+    <div>
+      {{ commentsForBook }}
+    </div>
     <div class="row my-3">
       <div class="col-md-12">
         <div class="box">
@@ -137,9 +140,67 @@
                     class="d-flex flex-row align-items-center"
                     style="gap: 10px"
                   >
-                    <p class="small text-muted mb-0">Upvote?</p>
+                    <div
+                      class="d-flex flex-row align-items-center"
+                      style="gap: 10px"
+                      v-if="!user"
+                    >
+                      <p class="small mb-0">Login for upvote!</p>
+                      <font-awesome-icon
+                        :icon="['fas', 'thumbs-up']"
+                        style="color: var(--secondary-color)"
+                      />
+                    </div>
+                    <div
+                      class="d-flex flex-row align-items-center"
+                      style="gap: 10px; cursor: pointer"
+                      v-else-if="
+                        !comment.upvotes.includes(user._id) &&
+                        comment.postedBy._id !== user._id
+                      "
+                      @click="upvote(comment._id)"
+                    >
+                      <p class="small mb-0">Upvote?</p>
+                      <font-awesome-icon :icon="['far', 'thumbs-up']" />
+                    </div>
+
+                    <div
+                      class="d-flex flex-row align-items-center"
+                      style="gap: 10px; cursor: pointer"
+                      v-else-if="
+                        comment.upvotes.includes(user._id) &&
+                        comment.postedBy._id !== user._id
+                      "
+                      @click="downvote(comment._id)"
+                    >
+                      <p class="small mb-0">Upvoted</p>
+                      <font-awesome-icon
+                        :icon="['fas', 'thumbs-up']"
+                        style="color: var(--secondary-color)"
+                      />
+                    </div>
+
+                    <div
+                      v-else
+                      class="d-flex flex-row align-items-center"
+                      style="gap: 10px"
+                    >
+                      <p class="small mb-0">
+                        You can't upvote for your comment
+                      </p>
+                      <font-awesome-icon
+                        :icon="['fas', 'thumbs-up']"
+                        style="color: var(--secondary-color)"
+                      />
+                    </div>
+
+                    <p class="small text-muted mb-0">
+                      {{ comment.upvotes.length }}
+                    </p>
+
+                    <!--                     <p class="small text-muted mb-0">Upvote?</p>
                     <font-awesome-icon :icon="['far', 'thumbs-up']" />
-                    <p class="small text-muted mb-0">3</p>
+                    <p class="small text-muted mb-0">3</p> -->
                   </div>
                 </div>
               </div>
@@ -201,10 +262,31 @@ export default {
   created() {
     this.selectBook();
     this.fetchCommentsForBook(this.$route.params.id);
+    this.fetchRatingsForBook(this.$route.params.id);
   },
   methods: {
-    ...mapActions(useCommentStore, ['addNewComment', 'fetchCommentsForBook']),
+    ...mapActions(useCommentStore, [
+      'addNewComment',
+      'fetchCommentsForBook',
+      'upvoteComment',
+      'downvoteComment',
+    ]),
     ...mapActions(useRatingStore, ['addNewRate', 'fetchRatingsForBook']),
+
+    async upvote(commentId) {
+      try {
+        await this.upvoteComment(commentId);
+
+        await this.fetchCommentsForBook(this.$route.params.id);
+      } catch (error) {}
+    },
+    async downvote(commentId) {
+      try {
+        await this.downvoteComment(commentId);
+
+        await this.fetchCommentsForBook(this.$route.params.id);
+      } catch (error) {}
+    },
     async addComment() {
       try {
         const bookId = this.$route.params.id;

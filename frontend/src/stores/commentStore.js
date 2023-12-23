@@ -53,5 +53,42 @@ export const useCommentStore = defineStore('commentStore', {
         console.log(error);
       }
     },
+
+    async upvoteComment(commentId) {
+      console.log('commentId store', commentId);
+      try {
+        const response = await axios.post(
+          `http://localhost:3000/api/v1/comments/${commentId}/upvote`
+        );
+
+        const updatedComment = response.data.comment;
+
+        const commentIndex = this.comments.findIndex(
+          (comment) => comment._id === updatedComment._id
+        );
+
+        if (commentIndex !== -1) {
+          this.comments[commentIndex] = updatedComment;
+        }
+      } catch (error) {}
+    },
+
+    async downvoteComment(commentId) {
+      try {
+        const response = await axios.post(
+          `http://localhost:3000/api/v1/comments/${commentId}/downvote`
+        );
+
+        const updatedComment = response.data.comment;
+
+        const commentIndex = this.comments.findIndex(
+          (comment) => comment._id === updatedComment._id
+        );
+
+        if (commentIndex !== -1) {
+          this.comments[commentIndex] = updatedComment;
+        }
+      } catch (error) {}
+    },
   },
 });
