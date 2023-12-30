@@ -127,83 +127,74 @@
   </section>
 </template>
 
-<script>
+<script setup>
 import { useAuthStore } from '@/stores/authStore.js';
 import { mapActions } from 'pinia';
 import { useToast } from 'vue-toastification';
-export default {
-  name: 'RegisterView',
-  data() {
-    return {
-      formData: {
-        username: '',
-        email: '',
-        password: '',
-      },
-      showUsernameWarningMessage: false,
-      showEmailWarningMessage: false,
-      showPasswordWarningMessage: false,
-      existingEmail: null,
-      showGenericWarningMessage: false,
-    };
-  },
-  methods: {
-    ...mapActions(useAuthStore, ['register']),
-    async submitForm() {
-      try {
-        await this.register(this.formData);
+import { ref, reactive, computed } from 'vue';
+import { useRouter } from 'vue-router';
 
-        const toast = useToast();
+const formData = reactive({
+  username: '',
+  email: '',
+  password: '',
+});
 
-        toast.success('You will be redirected to the login page', {
-          position: 'top-right',
-          timeout: 3500,
-          closeButton: 'button',
-          icon: true,
-          rtl: false,
-        });
+const showUsernameWarningMessage = ref(false);
+const showEmailWarningMessage = ref(false);
+const showPasswordWarningMessage = ref(false);
+const existingEmail = ref(null);
+const showGenericWarningMessage = ref(false);
 
-        setTimeout(() => {
-          this.$router.push('/login');
-        }, 4000);
-      } catch (data) {
-        const { error } = data;
+const authStore = useAuthStore();
+const router = useRouter();
 
-        if (error === 'The Email is already exist!') {
-          this.existingEmail = this.formData.email;
-        } else {
-          this.showGenericWarningMessage = true;
-          this.formData = {
-            username: '',
-            email: '',
-            password: '',
-          };
-        }
-      }
-    },
-  },
+const submitForm = async () => {
+  try {
+    await authStore.register(formData);
 
-  computed: {
-    isFormValid() {
-      return this.isUsernameValid && this.isEmailValid && this.isPasswordValid;
-    },
-    isUsernameValid() {
-      return (
-        this.formData.username.length >= 5 &&
-        this.formData.username.length <= 20
-      );
-    },
-    isEmailValid() {
-      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(this.formData.email);
-    },
-    isPasswordValid() {
-      return (
-        this.formData.password.length >= 4 &&
-        this.formData.password.length <= 10
-      );
-    },
-  },
+    const toast = useToast();
+
+    toast.success('You will be redirected to the login page', {
+      position: 'top-right',
+      timeout: 3500,
+      closeButton: 'button',
+      icon: true,
+      rtl: false,
+    });
+
+    setTimeout(() => {
+      router.push('/login');
+    }, 4000);
+  } catch (data) {
+    const { error } = data;
+
+    if (error === 'The Email is already exist!') {
+      existingEmail.value = formData.email;
+    } else {
+      showGenericWarningMessage.value = true;
+
+      formData.username = '';
+      formData.email = '';
+      formData.password = '';
+    }
+  }
 };
+
+const isFormValid = computed(
+  () => isUsernameValid.value && isEmailValid.value && isPasswordValid.value
+);
+const isUsernameValid = computed(
+  () => formData.username.length >= 5 && formData.username.length <= 20
+);
+
+const isEmailValid = computed(() =>
+  /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)
+);
+
+const isPasswordValid = computed(
+  () => formData.password.length >= 4 && formData.password.length <= 10
+);
 </script>
 
 <style scoped></style>
