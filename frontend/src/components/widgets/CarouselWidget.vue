@@ -40,39 +40,33 @@
   </div>
 </template>
 
-<script>
-export default {
-  name: 'CarouselWidget',
-  props: {
-    items: {
-      type: Array,
-      required: true,
-    },
-    height: {
-      type: String,
-      default: '100%',
-    },
+<script setup>
+import { ref } from 'vue';
+const props = defineProps({
+  items: {
+    type: Array,
+    required: true,
   },
-  data() {
-    return {
-      currentItemIndex: 0,
-      selectedItem: null,
-    };
+  height: {
+    type: String,
+    default: '100%',
   },
-  created() {
-    this.selectedItem = this.items[0];
-  },
-  methods: {
-    nextItem() {
-      this.currentItemIndex = (this.currentItemIndex + 1) % this.items.length;
-      this.selectedItem = this.items[this.currentItemIndex];
-    },
-    prevItem() {
-      this.currentItemIndex =
-        (this.currentItemIndex - 1 + this.items.length) % this.items.length;
-      this.selectedItem = this.items[this.currentItemIndex];
-    },
-  },
+});
+
+const currentItemIndex = ref(0);
+const selectedItem = ref(null);
+
+selectedItem.value = props.items[0];
+
+const nextItem = () => {
+  currentItemIndex.value = (currentItemIndex.value + 1) % props.items.length;
+  selectedItem.value = props.items[currentItemIndex.value];
+};
+
+const prevItem = () => {
+  currentItemIndex.value =
+    (currentItemIndex.value - 1 + props.items.length) % props.items.length;
+  selectedItem.value = props.items[currentItemIndex.value];
 };
 </script>
 

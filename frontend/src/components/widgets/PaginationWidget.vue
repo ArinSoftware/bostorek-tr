@@ -32,25 +32,22 @@
   </nav>
 </template>
 
-<script>
-export default {
-  name: 'PaginationWidget',
-  emits: ['page-changed'],
-  props: {
-    currentPage: {
-      type: Number,
-      required: true,
-    },
-    totalPages: {
-      type: Number,
-      required: true,
-    },
+<script setup>
+const props = defineProps({
+  currentPage: {
+    type: Number,
+    required: true,
   },
-  methods: {
-    goToPage(page) {
-      this.$emit('page-changed', page);
-    },
+  totalPages: {
+    type: Number,
+    required: true,
   },
+});
+
+const emit = defineEmits(['page-changed']);
+
+const goToPage = (page) => {
+  emit('page-changed', page);
 };
 </script>
 

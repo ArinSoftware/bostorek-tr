@@ -330,7 +330,6 @@ export default {
     selectBook() {
       const bookId = this.$route.params.id;
       this.book = this.selectedBook(bookId);
-      console.log('this.book', this.book);
       this.loading = false;
     },
   },

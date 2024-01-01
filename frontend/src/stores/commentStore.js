@@ -14,8 +14,6 @@ export const useCommentStore = defineStore('commentStore', {
           'http://localhost:3000/api/v1/comments'
         );
 
-        console.log('response.data.comments', response.data.comments);
-
         this.comments = response.data.comments;
       } catch (error) {
         console.error('Error at fetching comments', error);

@@ -62,7 +62,6 @@ const getCommentsByUser = async (req, res) => {
 const upvoteComment = async (req, res) => {
   try {
     const commentId = req.params.id;
-    console.log('commentId', commentId);
     const userId = req.user._id;
 
     const comment = await Comment.findById(commentId);
