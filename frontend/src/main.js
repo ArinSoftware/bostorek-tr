@@ -43,7 +43,11 @@ const authStore = useAuthStore(pinia);
 axios.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response && error.response.status === 401) {
+    if (
+      error.response &&
+      error.response.status === 401 &&
+      error.response.data.error === 'Token has expired!'
+    ) {
       // Display Toast Message
       toast.error('Your token has expired, forwarding login page', {
         position: 'top-right',
@@ -58,6 +62,8 @@ axios.interceptors.response.use(
         router.push('/login');
       }, 3000);
     }
+
+    throw error;
   }
 );
 
